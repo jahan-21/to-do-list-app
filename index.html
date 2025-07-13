@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To Do List App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f3f0ff;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 36px;
+      color: #4a148c;
+    }
+
+    .box {
+      width: 90%;
+      max-width: 450px;
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px 30px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      margin: 50px auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 16px;
+      transition: 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #7e57c2;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #7e57c2;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #5e35b1;
+    }
+   .category {
+  width: fit-content;
+  min-width: 200px;
+  max-width: 300px;
+  margin: 10px auto; 
+  background: #ede7f6;
+  padding: 10px 12px;
+  border: 1px solid #d1c4e9;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 17px;
+}
+
+.category-name {
+  flex-grow: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #b71c1c;
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <h1>📝 To Do List App</h1>
+  <div class="box">
+    <input type="text" id="categoryInput" placeholder="Add a category (e.g., Stationary)">
+    <button onclick="addCategory()">+ Add Category</button>
+    <div id="categoryList" style="margin-top: 20px;"></div>
+  </div>
+
+  <script>
+    const categoryList = document.getElementById("categoryList");
+    let categories = JSON.parse(localStorage.getItem("allCategories")) || [];
+
+    categories.forEach(displayCategory);
+
+    function addCategory() {
+      const input = document.getElementById("categoryInput");
+      const categoryName = input.value.trim();
+
+      if (categoryName !== "") {
+        categories.push(categoryName);
+        localStorage.setItem("allCategories", JSON.stringify(categories));
+        displayCategory(categoryName);
+        input.value = "";
+      }
+    }
+
+    function displayCategory(name) {
+  const div = document.createElement("div");
+  div.className = "category";
+
+  const span = document.createElement("span");
+  span.className = "category-name";
+  span.textContent = name;
+  span.onclick = function () {
+    localStorage.setItem("taskCategory", name);
+    window.location.href = "tasks.html";
+  };
+
+  const del = document.createElement("button");
+  del.className = "delete-btn";
+  del.innerHTML = "🗑️"; // small and neat
+  del.onclick = function (e) {
+    e.stopPropagation(); // stop navigation
+    div.remove();
+    categories = categories.filter(cat => cat !== name);
+    localStorage.setItem("allCategories", JSON.stringify(categories));
+  };
+
+  div.appendChild(span);
+  div.appendChild(del);
+  categoryList.appendChild(div);
+}
+
+  </script>
+
+</body>
+</html>

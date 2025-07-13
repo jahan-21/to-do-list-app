@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Items</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f0ff;
+    }
+    .box {
+      width: 400px;
+      background: #e8f5e9;
+      border: 2px solid black;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    h1 {
+      text-align: center;
+      color: #4a148c;
+    }
+    input[type="text"], button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #7e57c2;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #5e35b1;
+    }
+    ul {
+      padding: 0;
+    }
+    li {
+      list-style: none;
+      font-size: 17px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      font-size: 14px;
+      color: #b71c1c;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="categoryTitle">Your Task</h1>
+  <div class="box">
+    <input type="text" id="itemInput" placeholder="Add item (e.g., Pencil)">
+    <button onclick="addItem()">Add Item</button>
+
+    <ul id="itemList" class="task-list"></ul>
+  </div>
+
+  <script>
+    const category = localStorage.getItem("taskCategory");
+    const itemList = document.getElementById("itemList");
+    const input = document.getElementById("itemInput");
+    document.getElementById("categoryTitle").textContent = category;
+
+    
+    function loadItems() {
+      const items = JSON.parse(localStorage.getItem(category)) || [];
+      items.forEach(text => addItemToUI(text));
+    }
+
+    
+    function saveItems() {
+      const items = [];
+      document.querySelectorAll("#itemList li span").forEach(span => {
+        items.push(span.textContent.trim());
+      });
+      localStorage.setItem(category, JSON.stringify(items));
+    }
+
+    
+    function addItem() {
+      const value = input.value.trim();
+      if (value !== "") {
+        addItemToUI(value);
+        saveItems();
+        input.value = "";
+      }
+    }
+
+    
+    function addItemToUI(text) {
+      const li = document.createElement("li");
+
+      const left = document.createElement("div");
+      left.className = "item-left";
+      left.innerHTML = `<input type="checkbox"><span>${text}</span>`;
+
+      const delBtn = document.createElement("button");
+      delBtn.className = "delete-btn";
+      delBtn.innerHTML = "🗑️";
+      delBtn.onclick = function () {
+        li.remove();
+        saveItems();
+      };
+
+      li.appendChild(left);
+      li.appendChild(delBtn);
+      itemList.appendChild(li);
+    }
+
+    loadItems();
+  </script>
+
+</body>
+</html>
