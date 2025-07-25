@@ -138,9 +138,9 @@
 
   const del = document.createElement("button");
   del.className = "delete-btn";
-  del.innerHTML = "🗑️"; // small and neat
+  del.innerHTML = "🗑️"; 
   del.onclick = function (e) {
-    e.stopPropagation(); // stop navigation
+    e.stopPropagation(); 
     div.remove();
     categories = categories.filter(cat => cat !== name);
     localStorage.setItem("allCategories", JSON.stringify(categories));
